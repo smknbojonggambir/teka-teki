@@ -1,83 +1,133 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Teka-Teki Silang Dasar Komputer & Pemrograman</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧩 Teka-Teki Silang Komputer Interaktif</title>
     <style>
-        body { font-family: Arial, sans-serif; }
+        /* --- General Styling --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        h2 {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        /* --- Grid Styling (Responsive) --- */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(16, 25px); /* 15 Kolom + 1 Label */
-            grid-template-rows: repeat(17, 25px); /* 16 Baris + 1 Label */
-            border: 1px solid #ccc;
-            margin-bottom: 30px;
+            /* 16 kolom responsif. Ukuran sel menyesuaikan viewport */
+            grid-template-columns: repeat(16, minmax(20px, 1fr));
+            grid-template-rows: repeat(17, auto);
+            max-width: 600px; /* Batas lebar agar grid tetap rapi */
+            margin: 20px auto;
+            border: 2px solid #007bff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .grid-cell {
-            width: 25px;
-            height: 25px;
-            border: 1px solid #aaa;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: flex-start; /* Nomor mulai di sudut kiri atas */
-            align-items: flex-start;
-            font-size: 8px;
-            font-weight: bold;
-            background-color: #eee; /* Latar belakang untuk membedakan */
             position: relative;
-        }
-        .label {
-            background-color: #fff;
-            border: none;
-            font-weight: bold;
-            font-size: 10px;
+            padding: 0;
+            border: 1px solid #ddd;
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: #fff;
+            aspect-ratio: 1 / 1; /* Memastikan sel selalu berbentuk kotak */
         }
-        .blank-cell {
-            background-color: #fff; /* Sel kosong/putih */
+        .label {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             border: none;
         }
-        /* Penempatan Nomor Awal (Simulasi Tata Letak) */
-        .n-1-m { grid-area: 2 / 10; }
-        .n-2-m { grid-area: 5 / 6; }
-        .n-3-m { grid-area: 8 / 4; }
-        .n-4-m { grid-area: 9 / 1; }
-        .n-5-m { grid-area: 12 / 3; }
-        .n-6-m { grid-area: 2 / 8; }
-        .n-7-m { grid-area: 15 / 1; }
-        .n-8-m { grid-area: 13 / 11; }
-        .n-9-m { grid-area: 6 / 12; }
-        .n-10-m { grid-area: 4 / 14; }
-        .n-11-m { grid-area: 17 / 2; }
-        .n-12-m { grid-area: 11 / 7; }
-        .n-13-m { grid-area: 14 / 5; }
-        .n-14-m { grid-area: 3 / 1; }
-        .n-15-m { grid-area: 2 / 1; }
+        .blank-cell {
+            background-color: #343a40; /* Sel yang tidak terisi */
+            border: 1px solid #343a40;
+        }
+        /* Input per karakter */
+        .char-input {
+            width: 90%;
+            height: 90%;
+            border: none;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            outline: none;
+        }
+        /* Nomor Petunjuk */
+        .clue-number {
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            font-size: 8px;
+            font-weight: bold;
+            color: #007bff;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 0 2px;
+            border-radius: 2px;
+            line-height: 1;
+        }
 
-        .n-1-n { grid-area: 2 / 11; }
-        .n-2-n { grid-area: 3 / 13; }
-        .n-3-n { grid-area: 2 / 4; }
-        .n-4-n { grid-area: 6 / 3; }
-        .n-5-n { grid-area: 5 / 9; }
-        .n-6-n { grid-area: 1 / 15; }
-        .n-7-n { grid-area: 6 / 14; }
-        .n-8-n { grid-area: 4 / 2; }
-        .n-9-n { grid-area: 4 / 12; }
-        .n-10-n { grid-area: 5 / 5; }
-        .n-11-n { grid-area: 6 / 6; }
-        .n-12-n { grid-area: 2 / 8; }
-        .n-13-n { grid-area: 1 / 10; }
-        .n-14-n { grid-area: 8 / 2; }
-        .n-15-n { grid-area: 2 / 7; }
-
+        /* --- Clue List Styling --- */
+        .clue-list-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .clue-list-container > div {
+            flex: 1 1 45%; /* Responsif di 2 kolom */
+            min-width: 300px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        ol {
+            padding-left: 20px;
+            list-style-type: decimal;
+        }
+        li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .grid-container {
+                max-width: 100%;
+                margin: 20px 0;
+            }
+            .clue-list-container > div {
+                flex-basis: 100%;
+                min-width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
 
     <h1>🧩 Teka-Teki Silang Dasar Komputer & Pemrograman</h1>
-    <p>Isi kotak-kotak kosong di bawah dengan jawaban yang sesuai dengan petunjuk.</p>
+    <p style="text-align: center; font-style: italic; color: #555;">Tantang pengetahuan Anda! Isi setiap kotak dengan satu karakter.</p>
 
-    <h2>1. Kisi (Grid) TTS</h2>
+    <h2>1. Kisi (Grid) TTS Interaktif</h2>
     <div class="grid-container">
         <div class="label"></div>
         <div class="label">A</div><div class="label">B</div><div class="label">C</div><div class="label">D</div><div class="label">E</div>
@@ -85,72 +135,72 @@
         <div class="label">K</div><div class="label">L</div><div class="label">M</div><div class="label">N</div><div class="label">O</div>
 
         <div class="label">1</div>
-        <div class="grid-cell n-15-m">15</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-3-n">3</div><div class="grid-cell n-10-n">10</div>
-        <div class="grid-cell n-11-n"></div><div class="grid-cell n-15-n">15</div><div class="grid-cell n-6-m n-12-n">6</div><div class="grid-cell"></div><div class="grid-cell n-13-n">13</div>
-        <div class="grid-cell n-1-n">1</div><div class="grid-cell"></div><div class="grid-cell n-2-n">2</div><div class="grid-cell"></div><div class="grid-cell n-6-n">6</div>
+        <div class="blank-cell"></div><div class="blank-cell"></div><div class="blank-cell"></div><div class="grid-cell"><span class="clue-number">3</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"><input type="text" maxlength="1" class="char-input"></div>
+        <div class="grid-cell"><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"><span class="clue-number">15</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell n-6-m"><span class="clue-number">6</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell n-13-n"><span class="clue-number">13</span><input type="text" maxlength="1" class="char-input"></div>
+        <div class="grid-cell n-1-n"><span class="clue-number">1</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">2</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">6</span><input type="text" maxlength="1" class="char-input"></div>
 
         <div class="label">2</div>
-        <div class="grid-cell n-14-m">14</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell n-2-m">2</div><div class="grid-cell n-9-m"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-1-m">1</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-9-m"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell n-15-m"><span class="clue-number">15</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell n-2-m"><span class="clue-number">2</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell n-12-n"></div><div class="grid-cell"></div><div class="grid-cell n-1-m"><span class="clue-number">1</span><input type="text" maxlength="1" class="char-input"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
 
         <div class="label">3</div>
-        <div class="grid-cell"></div><div class="grid-cell n-8-n">8</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell n-14-m"><span class="clue-number">14</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell n-8-n"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-9-n">9</div><div class="grid-cell n-10-m">10</div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell n-9-n"><span class="clue-number">9</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell n-10-m"><span class="clue-number">10</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div>
 
         <div class="label">4</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-n">5</div><div class="grid-cell"></div>
-        <div class="grid-cell n-9-n"></div><div class="grid-cell n-9-m"></div><div class="grid-cell"></div><div class="grid-cell n-10-m"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell n-8-n"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-10-n"></div>
+        <div class="grid-cell n-11-n"></div><div class="grid-cell n-15-n"></div><div class="grid-cell"></div><div class="grid-cell n-5-n"><span class="clue-number">5</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div>
+        <div class="grid-cell n-9-n"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-10-m"></div><div class="grid-cell n-6-n"></div>
 
         <div class="label">5</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-n">4</div><div class="grid-cell"></div><div class="grid-cell n-10-n"></div>
-        <div class="grid-cell n-11-n"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-10-m"></div><div class="grid-cell n-7-n">7</div>
+        <div class="grid-cell"></div><div class="grid-cell n-8-n"></div><div class="grid-cell n-4-n"></div><div class="grid-cell n-10-m"></div><div class="grid-cell n-10-n"><span class="clue-number">10</span><input type="text" maxlength="1" class="char-input"></div>
+        <div class="grid-cell n-11-n"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-n"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-10-m"></div><div class="grid-cell n-7-n"><span class="clue-number">7</span><input type="text" maxlength="1" class="char-input"></div>
 
         <div class="label">6</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-n"></div><div class="grid-cell"></div><div class="grid-cell n-10-n"></div>
-        <div class="grid-cell n-11-n">11</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-9-m"></div><div class="grid-cell n-10-m"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell n-8-n"></div><div class="grid-cell n-4-n"><span class="clue-number">4</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell n-10-n"></div>
+        <div class="grid-cell n-11-n"><span class="clue-number">11</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell n-15-n"></div><div class="grid-cell"></div><div class="grid-cell n-5-n"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell n-9-m"><span class="clue-number">9</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell n-10-m"></div><div class="grid-cell n-7-n"></div>
 
         <div class="label">7</div>
-        <div class="grid-cell"></div><div class="grid-cell n-14-n">14</div><div class="grid-cell n-4-n"></div><div class="grid-cell n-3-m">3</div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell n-14-n"></div><div class="grid-cell n-4-n"></div><div class="grid-cell n-3-m"><span class="clue-number">3</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-n"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
 
         <div class="label">8</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-m">4</div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell n-14-n"><span class="clue-number">14</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-m"><span class="clue-number">4</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
 
         <div class="label">9</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell n-4-m"><span class="clue-number">4</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell n-14-n"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-m"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
 
         <div class="label">10</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-12-m">12</div>
+        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-12-m"><span class="clue-number">12</span><input type="text" maxlength="1" class="char-input"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-m"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
 
         <div class="label">11</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-m">5</div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-m"><span class="clue-number">5</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-m"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
 
         <div class="label">12</div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-m"></div><div class="grid-cell"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-m"></div><div class="grid-cell"></div>
-        <div class="grid-cell n-13-m"></div><div class="grid-cell n-8-m">8</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
 
         <div class="label">13</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-m"></div><div class="grid-cell"></div><div class="grid-cell n-13-m">13</div>
+        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-m"></div><div class="grid-cell"></div><div class="grid-cell n-13-m"><span class="clue-number">13</span><input type="text" maxlength="1" class="char-input"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell n-8-m"><span class="clue-number">8</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
 
         <div class="label">14</div>
-        <div class="grid-cell n-7-m">7</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell n-7-m"><span class="clue-number">7</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
 
@@ -160,60 +210,56 @@
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
 
         <div class="label">16</div>
-        <div class="grid-cell"></div><div class="grid-cell n-11-m">11</div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+        <div class="grid-cell"></div><div class="grid-cell n-11-m"><span class="clue-number">11</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
         <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-
+        
     </div>
 
     <h2>2. Petunjuk Teka-Teki Silang</h2>
 
-    <table>
-        <tr>
-            <th style="width: 50%;">Mendatar (→)</th>
-            <th style="width: 50%;">Menurun (↓)</th>
-        </tr>
-        <tr>
-            <td>
-                <ol>
-                    <li>Tempat di dalam CPU yang berfungsi sebagai memori kerja tercepat.</li>
-                    <li>Bahan baku yang perlu diproses untuk menghasilkan informasi.</li>
-                    <li>Jenis data yang berupa angka dan dapat dihitung.</li>
-                    <li>Perangkat yang berfungsi menampilkan hasil pemrosesan.</li>
-                    <li>Proses menemukan dan memperbaiki <i>error</i> dalam program.</li>
-                    <li>Jenis memori yang bersifat <i>non-volatile</i> dan hanya bisa dibaca.</li>
-                    <li>Perangkat <i>input</i> yang juga berfungsi sebagai <i>output</i> (2 Kata).</li>
-                    <li>Papan sirkuit induk tempat semua komponen komputer terpasang.</li>
-                    <li>Digunakan untuk mengulang serangkaian instruksi dalam pemrograman.</li>
-                    <li>Singkatan dari <i>Binary Digit</i>.</li>
-                    <li>Pilihan antara beberapa jalur eksekusi dalam program.</li>
-                    <li>Secara khusus menangani semua operasi hitungan dan logika di dalam CPU.</li>
-                    <li>Media penyimpanan utama yang bersifat <i>non-volatile</i> (2 Kata).</li>
-                    <li>Alat penerjemah kode program (contoh: C++ atau Python).</li>
-                    <li>Bertugas mengatur, termasuk mengambil instruksi (<i>Fetch</i>) dan mendekode.</li>
-                </ol>
-            </td>
-            <td>
-                <ol>
-                    <li>Perangkat lunak dasar yang wajib ada di setiap komputer (2 Kata).</li>
-                    <li>Istilah populer untuk <i>error</i> dalam program.</li>
-                    <li>Perencanaan atau resep pemecahan masalah.</li>
-                    <li>Digunakan untuk menyimpan data berupa teks.</li>
-                    <li>Digunakan untuk bilangan desimal atau pecahan dalam pemrograman.</li>
-                    <li>Mengharuskan semua ekspresi yang dihubungkan bernilai <i>True</i>.</li>
-                    <li>RAM bersifat ..., yang berarti tidak menyimpan data tanpa daya.</li>
-                    <li>Pusat pemrosesan dan eksekusi instruksi.</li>
-                    <li>Digunakan untuk iterasi yang telah ditentukan batasnya.</li>
-                    <li>Jenis data mentah yang jelek akan menghasilkan hasil (informasi) yang jelek (2 Kata).</li>
-                    <li>Jajaran genjang digunakan untuk menunjukkan proses ... atau <i>Output</i> informasi (2 Kata).</li>
-                    <li>Satu-satunya bahasa yang dieksekusi langsung oleh CPU (2 Kata).</li>
-                    <li>Bentuk dalam <i>flowchart</i> yang selalu digunakan untuk pertanyaan Ya/Tidak (2 Kata).</li>
-                    <li>Proses memastikan data bersih dan benar (2 Kata).</li>
-                    <li>Bertindak sebagai jalan tol untuk transfer informasi di dalam komputer.</li>
-                </ol>
-            </td>
-        </tr>
-    </table>
+    <div class="clue-list-container">
+        <div>
+            <h3>Mendatar (→)</h3>
+            <ol>
+                <li>Tempat di dalam CPU yang berfungsi sebagai memori kerja tercepat.</li>
+                <li>Bahan baku yang perlu diproses untuk menghasilkan informasi.</li>
+                <li>Jenis data yang berupa angka dan dapat dihitung.</li>
+                <li>Perangkat yang berfungsi menampilkan hasil pemrosesan.</li>
+                <li>Proses menemukan dan memperbaiki <i>error</i> dalam program.</li>
+                <li>Jenis memori yang bersifat <i>non-volatile</i> dan hanya bisa dibaca.</li>
+                <li>Perangkat <i>input</i> yang juga berfungsi sebagai <i>output</i> (2 Kata).</li>
+                <li>Papan sirkuit induk tempat semua komponen komputer terpasang.</li>
+                <li>Digunakan untuk mengulang serangkaian instruksi dalam pemrograman.</li>
+                <li>Singkatan dari <i>Binary Digit</i>.</li>
+                <li>Pilihan antara beberapa jalur eksekusi dalam program.</li>
+                <li>Secara khusus menangani semua operasi hitungan dan logika di dalam CPU.</li>
+                <li>Media penyimpanan utama yang bersifat <i>non-volatile</i> (2 Kata).</li>
+                <li>Alat penerjemah kode program (contoh: C++ atau Python).</li>
+                <li>Bertugas mengatur, termasuk mengambil instruksi (<i>Fetch</i>) dan mendekode.</li>
+            </ol>
+        </div>
+        <div>
+            <h3>Menurun (↓)</h3>
+            <ol>
+                <li>Perangkat lunak dasar yang wajib ada di setiap komputer (2 Kata).</li>
+                <li>Istilah populer untuk <i>error</i> dalam program.</li>
+                <li>Perencanaan atau resep pemecahan masalah.</li>
+                <li>Digunakan untuk menyimpan data berupa teks.</li>
+                <li>Digunakan untuk bilangan desimal atau pecahan dalam pemrograman.</li>
+                <li>Mengharuskan semua ekspresi yang dihubungkan bernilai <i>True</i>.</li>
+                <li>RAM bersifat ..., yang berarti tidak menyimpan data tanpa daya.</li>
+                <li>Pusat pemrosesan dan eksekusi instruksi.</li>
+                <li>Digunakan untuk iterasi yang telah ditentukan batasnya.</li>
+                <li>Jenis data mentah yang jelek akan menghasilkan hasil (informasi) yang jelek (2 Kata).</li>
+                <li>Jajaran genjang digunakan untuk menunjukkan proses ... atau <i>Output</i> informasi (2 Kata).</li>
+                <li>Satu-satunya bahasa yang dieksekusi langsung oleh CPU (2 Kata).</li>
+                <li>Bentuk dalam <i>flowchart</i> yang selalu digunakan untuk pertanyaan Ya/Tidak (2 Kata).</li>
+                <li>Proses memastikan data bersih dan benar (2 Kata).</li>
+                <li>Bertindak sebagai jalan tol untuk transfer informasi di dalam komputer.</li>
+            </ol>
+        </div>
+    </div>
 
 </body>
 </html>
