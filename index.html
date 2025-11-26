@@ -23,13 +23,73 @@
             padding-bottom: 5px;
             margin-top: 30px;
         }
+        
+        /* --- Form Identity Styling --- */
+        #identity-form {
+            max-width: 400px;
+            margin: 0 auto 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        #identity-form input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            text-transform: uppercase;
+        }
+        #start-button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        #start-button:hover {
+            background-color: #218838;
+        }
+
+        /* --- Kirim WA Button Styling --- */
+        #whatsapp-button {
+            display: none; /* Awalnya disembunyikan */
+            width: 90%;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #25D366; /* Warna Hijau WhatsApp */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+        #whatsapp-button:hover {
+            background-color: #1FAF59;
+        }
+
+        /* --- TTS Content Visibility --- */
+        #tts-content {
+            display: none;
+        }
+
         /* --- Grid Styling (Responsive) --- */
         .grid-container {
             display: grid;
-            /* 16 kolom responsif. Ukuran sel menyesuaikan viewport */
             grid-template-columns: repeat(16, minmax(20px, 1fr));
             grid-template-rows: repeat(17, auto);
-            max-width: 600px; /* Batas lebar agar grid tetap rapi */
+            max-width: 600px;
             margin: 20px auto;
             border: 2px solid #007bff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -42,7 +102,7 @@
             justify-content: center;
             align-items: center;
             background-color: #fff;
-            aspect-ratio: 1 / 1; /* Memastikan sel selalu berbentuk kotak */
+            aspect-ratio: 1 / 1;
         }
         .label {
             background-color: #007bff;
@@ -54,7 +114,7 @@
             border: none;
         }
         .blank-cell {
-            background-color: #343a40; /* Sel yang tidak terisi */
+            background-color: #343a40;
             border: 1px solid #343a40;
         }
         /* Input per karakter */
@@ -94,7 +154,7 @@
             margin: 0 auto;
         }
         .clue-list-container > div {
-            flex: 1 1 45%; /* Responsif di 2 kolom */
+            flex: 1 1 45%;
             min-width: 300px;
             padding: 15px;
             background-color: #fff;
@@ -125,141 +185,260 @@
 <body>
 
     <h1>🧩 Teka-Teki Silang Dasar Komputer & Pemrograman</h1>
-    <p style="text-align: center; font-style: italic; color: #555;">Tantang pengetahuan Anda! Isi setiap kotak dengan satu karakter.</p>
+    <p style="text-align: center; font-style: italic; color: #555;">Mohon isi Nama dan Kelas Anda terlebih dahulu untuk memulai.</p>
 
-    <h2>1. Kisi (Grid) TTS Interaktif</h2>
-    <div class="grid-container">
-        <div class="label"></div>
-        <div class="label">A</div><div class="label">B</div><div class="label">C</div><div class="label">D</div><div class="label">E</div>
-        <div class="label">F</div><div class="label">G</div><div class="label">H</div><div class="label">I</div><div class="label">J</div>
-        <div class="label">K</div><div class="label">L</div><div class="label">M</div><div class="label">N</div><div class="label">O</div>
+    <div id="identity-form">
+        <h2>Masukkan Data Diri</h2>
+        <input type="text" id="nama" placeholder="NAMA LENGKAP" required oninput="this.value = this.value.toUpperCase()">
+        <input type="text" id="kelas" placeholder="KELAS (Contoh: X RPL A)" required oninput="this.value = this.value.toUpperCase()">
+        <button id="start-button" onclick="validateAndStart()">MULAI KERJAKAN TTS</button>
+    </div>
 
-        <div class="label">1</div>
-        <div class="blank-cell"></div><div class="blank-cell"></div><div class="blank-cell"></div><div class="grid-cell"><span class="clue-number">3</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"><input type="text" maxlength="1" class="char-input"></div>
-        <div class="grid-cell"><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"><span class="clue-number">15</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell n-6-m"><span class="clue-number">6</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell n-13-n"><span class="clue-number">13</span><input type="text" maxlength="1" class="char-input"></div>
-        <div class="grid-cell n-1-n"><span class="clue-number">1</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">2</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">6</span><input type="text" maxlength="1" class="char-input"></div>
+    <button id="whatsapp-button" onclick="sendToWhatsApp()">
+        KIRIM JAWABAN KE WA 081223546686
+    </button>
 
-        <div class="label">2</div>
-        <div class="grid-cell n-15-m"><span class="clue-number">15</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell n-2-m"><span class="clue-number">2</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell n-12-n"></div><div class="grid-cell"></div><div class="grid-cell n-1-m"><span class="clue-number">1</span><input type="text" maxlength="1" class="char-input"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-
-        <div class="label">3</div>
-        <div class="grid-cell n-14-m"><span class="clue-number">14</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell n-8-n"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell n-9-n"><span class="clue-number">9</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell n-10-m"><span class="clue-number">10</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div>
-
-        <div class="label">4</div>
-        <div class="grid-cell"></div><div class="grid-cell n-8-n"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-10-n"></div>
-        <div class="grid-cell n-11-n"></div><div class="grid-cell n-15-n"></div><div class="grid-cell"></div><div class="grid-cell n-5-n"><span class="clue-number">5</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div>
-        <div class="grid-cell n-9-n"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-10-m"></div><div class="grid-cell n-6-n"></div>
-
-        <div class="label">5</div>
-        <div class="grid-cell"></div><div class="grid-cell n-8-n"></div><div class="grid-cell n-4-n"></div><div class="grid-cell n-10-m"></div><div class="grid-cell n-10-n"><span class="clue-number">10</span><input type="text" maxlength="1" class="char-input"></div>
-        <div class="grid-cell n-11-n"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-n"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-10-m"></div><div class="grid-cell n-7-n"><span class="clue-number">7</span><input type="text" maxlength="1" class="char-input"></div>
-
-        <div class="label">6</div>
-        <div class="grid-cell"></div><div class="grid-cell n-8-n"></div><div class="grid-cell n-4-n"><span class="clue-number">4</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell n-10-n"></div>
-        <div class="grid-cell n-11-n"><span class="clue-number">11</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell n-15-n"></div><div class="grid-cell"></div><div class="grid-cell n-5-n"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell n-9-m"><span class="clue-number">9</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell n-10-m"></div><div class="grid-cell n-7-n"></div>
-
-        <div class="label">7</div>
-        <div class="grid-cell"></div><div class="grid-cell n-14-n"></div><div class="grid-cell n-4-n"></div><div class="grid-cell n-3-m"><span class="clue-number">3</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-n"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-
-        <div class="label">8</div>
-        <div class="grid-cell"></div><div class="grid-cell n-14-n"><span class="clue-number">14</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-m"><span class="clue-number">4</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-
-        <div class="label">9</div>
-        <div class="grid-cell n-4-m"><span class="clue-number">4</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell n-14-n"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-m"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-
-        <div class="label">10</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-12-m"><span class="clue-number">12</span><input type="text" maxlength="1" class="char-input"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-m"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-
-        <div class="label">11</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-m"><span class="clue-number">5</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-m"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-
-        <div class="label">12</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-m"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-4-m"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-
-        <div class="label">13</div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell n-5-m"></div><div class="grid-cell"></div><div class="grid-cell n-13-m"><span class="clue-number">13</span><input type="text" maxlength="1" class="char-input"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell n-8-m"><span class="clue-number">8</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-
-        <div class="label">14</div>
-        <div class="grid-cell n-7-m"><span class="clue-number">7</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-
-        <div class="label">15</div>
-        <div class="grid-cell n-7-m"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-
-        <div class="label">16</div>
-        <div class="grid-cell"></div><div class="grid-cell n-11-m"><span class="clue-number">11</span><input type="text" maxlength="1" class="char-input"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
-        <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+    <div id="tts-content">
+        <p style="text-align: center; font-style: italic; color: #555;">Selamat Mengerjakan, <span id="display-name" style="font-weight: bold;"></span>!</p>
         
+        <h2>1. Kisi (Grid) TTS Interaktif</h2>
+        <div class="grid-container" id="crossword-grid">
+            <div class="label"></div>
+            <div class="label">A</div><div class="label">B</div><div class="label">C</div><div class="label">D</div><div class="label">E</div>
+            <div class="label">F</div><div class="label">G</div><div class="label">H</div><div class="label">I</div><div class="label">J</div>
+            <div class="label">K</div><div class="label">L</div><div class="label">M</div><div class="label">N</div><div class="label">O</div>
+
+            <div class="label">1</div>
+            <div class="blank-cell"></div><div class="blank-cell"></div><div class="blank-cell"></div><div class="grid-cell"><span class="clue-number">3</span><input type="text" maxlength="1" class="char-input" id="r1c4"></div><div class="grid-cell"><input type="text" maxlength="1" class="char-input" id="r1c5"></div>
+            <div class="grid-cell"><input type="text" maxlength="1" class="char-input" id="r1c6"></div><div class="grid-cell"><span class="clue-number">15</span><input type="text" maxlength="1" class="char-input" id="r1c7"></div><div class="grid-cell"><span class="clue-number">6</span><input type="text" maxlength="1" class="char-input" id="r1c8"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">13</span><input type="text" maxlength="1" class="char-input" id="r1c10"></div>
+            <div class="grid-cell"><span class="clue-number">1</span><input type="text" maxlength="1" class="char-input" id="r1c11"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">2</span><input type="text" maxlength="1" class="char-input" id="r1c13"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">6</span><input type="text" maxlength="1" class="char-input" id="r1c15"></div>
+
+            <div class="label">2</div>
+            <div class="grid-cell"><span class="clue-number">15</span><input type="text" maxlength="1" class="char-input" id="r2c1"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"><span class="clue-number">2</span><input type="text" maxlength="1" class="char-input" id="r2c6"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">1</span><input type="text" maxlength="1" class="char-input" id="r2c10"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+            <div class="label">3</div>
+            <div class="grid-cell"><span class="clue-number">14</span><input type="text" maxlength="1" class="char-input" id="r3c1"></div><div class="grid-cell"><span class="clue-number">8</span><input type="text" maxlength="1" class="char-input" id="r3c2"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">9</span><input type="text" maxlength="1" class="char-input" id="r3c12"></div><div class="grid-cell"><span class="clue-number">10</span><input type="text" maxlength="1" class="char-input" id="r3c13"></div><div class="grid-cell"></div>
+
+            <div class="label">4</div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">5</span><input type="text" maxlength="1" class="char-input" id="r4c9"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+            <div class="label">5</div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">4</span><input type="text" maxlength="1" class="char-input" id="r5c3"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">10</span><input type="text" maxlength="1" class="char-input" id="r5c5"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">7</span><input type="text" maxlength="1" class="char-input" id="r5c15"></div>
+
+            <div class="label">6</div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">4</span><input type="text" maxlength="1" class="char-input" id="r6c3"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"><span class="clue-number">11</span><input type="text" maxlength="1" class="char-input" id="r6c6"></div><div class="grid-cell"><span class="clue-number">15</span><input type="text" maxlength="1" class="char-input" id="r6c7"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">9</span><input type="text" maxlength="1" class="char-input" id="r6c12"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+            <div class="label">7</div>
+            <div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">14</span><input type="text" maxlength="1" class="char-input" id="r7c2"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">3</span><input type="text" maxlength="1" class="char-input" id="r7c4"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+            <div class="label">8</div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">4</span><input type="text" maxlength="1" class="char-input" id="r8c9"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+            <div class="label">9</div>
+            <div class="grid-cell"><span class="clue-number">4</span><input type="text" maxlength="1" class="char-input" id="r9c1"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+            <div class="label">10</div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">12</span><input type="text" maxlength="1" class="char-input" id="r10c5"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+            <div class="label">11</div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">5</span><input type="text" maxlength="1" class="char-input" id="r11c3"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+            <div class="label">12</div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+            <div class="label">13</div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">13</span><input type="text" maxlength="1" class="char-input" id="r13c5"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"><span class="clue-number">8</span><input type="text" maxlength="1" class="char-input" id="r13c11"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+            <div class="label">14</div>
+            <div class="grid-cell"><span class="clue-number">7</span><input type="text" maxlength="1" class="char-input" id="r14c1"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+            <div class="label">15</div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+            <div class="label">16</div>
+            <div class="grid-cell"></div><div class="grid-cell"><span class="clue-number">11</span><input type="text" maxlength="1" class="char-input" id="r16c2"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+            <div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div><div class="grid-cell"></div>
+
+        </div>
+
+        <h2>2. Petunjuk Teka-Teki Silang</h2>
+
+        <div class="clue-list-container">
+            <div>
+                <h3>Mendatar (→)</h3>
+                <ol>
+                    <li id="m-1">Tempat di dalam CPU yang berfungsi sebagai memori kerja tercepat.</li>
+                    <li id="m-2">Bahan baku yang perlu diproses untuk menghasilkan informasi.</li>
+                    <li id="m-3">Jenis data yang berupa angka dan dapat dihitung.</li>
+                    <li id="m-4">Perangkat yang berfungsi menampilkan hasil pemrosesan.</li>
+                    <li id="m-5">Proses menemukan dan memperbaiki <i>error</i> dalam program.</li>
+                    <li id="m-6">Jenis memori yang bersifat <i>non-volatile</i> dan hanya bisa dibaca.</li>
+                    <li id="m-7">Perangkat <i>input</i> yang juga berfungsi sebagai <i>output</i> (2 Kata).</li>
+                    <li id="m-8">Papan sirkuit induk tempat semua komponen komputer terpasang.</li>
+                    <li id="m-9">Digunakan untuk mengulang serangkaian instruksi dalam pemrograman.</li>
+                    <li id="m-10">Singkatan dari <i>Binary Digit</i>.</li>
+                    <li id="m-11">Pilihan antara beberapa jalur eksekusi dalam program.</li>
+                    <li id="m-12">Secara khusus menangani semua operasi hitungan dan logika di dalam CPU.</li>
+                    <li id="m-13">Media penyimpanan utama yang bersifat <i>non-volatile</i> (2 Kata).</li>
+                    <li id="m-14">Alat penerjemah kode program (contoh: C++ atau Python).</li>
+                    <li id="m-15">Bertugas mengatur, termasuk mengambil instruksi (<i>Fetch</i>) dan mendekode.</li>
+                </ol>
+            </div>
+            <div>
+                <h3>Menurun (↓)</h3>
+                <ol>
+                    <li id="n-1">Perangkat lunak dasar yang wajib ada di setiap komputer (2 Kata).</li>
+                    <li id="n-2">Istilah populer untuk <i>error</i> dalam program.</li>
+                    <li id="n-3">Perencanaan atau resep pemecahan masalah.</li>
+                    <li id="n-4">Digunakan untuk menyimpan data berupa teks.</li>
+                    <li id="n-5">Digunakan untuk bilangan desimal atau pecahan dalam pemrograman.</li>
+                    <li id="n-6">Mengharuskan semua ekspresi yang dihubungkan bernilai <i>True</i>.</li>
+                    <li id="n-7">RAM bersifat ..., yang berarti tidak menyimpan data tanpa daya.</li>
+                    <li id="n-8">Pusat pemrosesan dan eksekusi instruksi.</li>
+                    <li id="n-9">Digunakan untuk iterasi yang telah ditentukan batasnya.</li>
+                    <li id="n-10">Jenis data mentah yang jelek akan menghasilkan hasil (informasi) yang jelek (2 Kata).</li>
+                    <li id="n-11">Jajaran genjang digunakan untuk menunjukkan proses ... atau <i>Output</i> informasi (2 Kata).</li>
+                    <li id="n-12">Satu-satunya bahasa yang dieksekusi langsung oleh CPU (2 Kata).</li>
+                    <li id="n-13">Bentuk dalam <i>flowchart</i> yang selalu digunakan untuk pertanyaan Ya/Tidak (2 Kata).</li>
+                    <li id="n-14">Proses memastikan data bersih dan benar (2 Kata).</li>
+                    <li id="n-15">Bertindak sebagai jalan tol untuk transfer informasi di dalam komputer.</li>
+                </ol>
+            </div>
+        </div>
     </div>
 
-    <h2>2. Petunjuk Teka-Teki Silang</h2>
+    <script>
+        const WA_NUMBER = "6281223546686"; // Nomor tujuan WA (Gunakan format 62)
 
-    <div class="clue-list-container">
-        <div>
-            <h3>Mendatar (→)</h3>
-            <ol>
-                <li>Tempat di dalam CPU yang berfungsi sebagai memori kerja tercepat.</li>
-                <li>Bahan baku yang perlu diproses untuk menghasilkan informasi.</li>
-                <li>Jenis data yang berupa angka dan dapat dihitung.</li>
-                <li>Perangkat yang berfungsi menampilkan hasil pemrosesan.</li>
-                <li>Proses menemukan dan memperbaiki <i>error</i> dalam program.</li>
-                <li>Jenis memori yang bersifat <i>non-volatile</i> dan hanya bisa dibaca.</li>
-                <li>Perangkat <i>input</i> yang juga berfungsi sebagai <i>output</i> (2 Kata).</li>
-                <li>Papan sirkuit induk tempat semua komponen komputer terpasang.</li>
-                <li>Digunakan untuk mengulang serangkaian instruksi dalam pemrograman.</li>
-                <li>Singkatan dari <i>Binary Digit</i>.</li>
-                <li>Pilihan antara beberapa jalur eksekusi dalam program.</li>
-                <li>Secara khusus menangani semua operasi hitungan dan logika di dalam CPU.</li>
-                <li>Media penyimpanan utama yang bersifat <i>non-volatile</i> (2 Kata).</li>
-                <li>Alat penerjemah kode program (contoh: C++ atau Python).</li>
-                <li>Bertugas mengatur, termasuk mengambil instruksi (<i>Fetch</i>) dan mendekode.</li>
-            </ol>
-        </div>
-        <div>
-            <h3>Menurun (↓)</h3>
-            <ol>
-                <li>Perangkat lunak dasar yang wajib ada di setiap komputer (2 Kata).</li>
-                <li>Istilah populer untuk <i>error</i> dalam program.</li>
-                <li>Perencanaan atau resep pemecahan masalah.</li>
-                <li>Digunakan untuk menyimpan data berupa teks.</li>
-                <li>Digunakan untuk bilangan desimal atau pecahan dalam pemrograman.</li>
-                <li>Mengharuskan semua ekspresi yang dihubungkan bernilai <i>True</i>.</li>
-                <li>RAM bersifat ..., yang berarti tidak menyimpan data tanpa daya.</li>
-                <li>Pusat pemrosesan dan eksekusi instruksi.</li>
-                <li>Digunakan untuk iterasi yang telah ditentukan batasnya.</li>
-                <li>Jenis data mentah yang jelek akan menghasilkan hasil (informasi) yang jelek (2 Kata).</li>
-                <li>Jajaran genjang digunakan untuk menunjukkan proses ... atau <i>Output</i> informasi (2 Kata).</li>
-                <li>Satu-satunya bahasa yang dieksekusi langsung oleh CPU (2 Kata).</li>
-                <li>Bentuk dalam <i>flowchart</i> yang selalu digunakan untuk pertanyaan Ya/Tidak (2 Kata).</li>
-                <li>Proses memastikan data bersih dan benar (2 Kata).</li>
-                <li>Bertindak sebagai jalan tol untuk transfer informasi di dalam komputer.</li>
-            </ol>
-        </div>
-    </div>
+        // Mapping Jawaban (Berdasarkan lokasi grid dan panjang kata)
+        const TTS_MAP = {
+            // MENDATAR (M) - Jawaban asli (Hanya untuk keperluan formatting pesan)
+            'M1': { clue: 'REGISTER', cells: ['r2c10', 'r2c11', 'r2c12', 'r2c13', 'r2c14', 'r2c15', 'r2c16', 'r2c17']}, // Contoh
+            // M2: DATA (r2c6 - r2c9) - Ini butuh penyesuaian ID di HTML
+            // M3: KUANTITATIF (r7c4 - r7c16)
+            // ... dst
+            
+            // Karena mapping ID per sel di HTML terlalu banyak, kita pakai fungsi pengambilan berdasarkan nomor clue saja
+            'M': [
+                {id: 1, cells: ['r2c10', 'r2c11', 'r2c12', 'r2c13', 'r2c14', 'r2c15', 'r2c16', 'r2c17']}, 
+                // Kita gunakan array dummy yang berisi ID-ID input yang sebenarnya terisi
+                {id: 1, inputIDs: ['r2c10', 'r2c11', 'r2c12', 'r2c13', 'r2c14', 'r2c15', 'r2c16', 'r2c17']},
+                {id: 2, inputIDs: ['r2c6', 'r2c7', 'r2c8', 'r2c9']}, // DATA
+                {id: 3, inputIDs: ['r7c4', 'r7c5', 'r7c6', 'r7c7', 'r7c8', 'r7c9', 'r7c10', 'r7c11', 'r7c12', 'r7c13', 'r7c14', 'r7c15', 'r7c16']}, // KUANTITATIF
+                {id: 4, inputIDs: ['r8c9', 'r8c10', 'r8c11', 'r8c12', 'r8c13', 'r8c14']}, // OUTPUT
+                // Lanjutkan dengan mapping ID yang BENAR dari HTML
+            ],
+            'N': [
+                // ...
+            ]
+        };
 
+        function validateAndStart() {
+            const namaInput = document.getElementById('nama');
+            const kelasInput = document.getElementById('kelas');
+            const ttsContent = document.getElementById('tts-content');
+            const identityForm = document.getElementById('identity-form');
+            const displayName = document.getElementById('display-name');
+            const waButton = document.getElementById('whatsapp-button');
+
+            if (namaInput.value.trim() === "" || kelasInput.value.trim() === "") {
+                alert("Mohon lengkapi kolom NAMA dan KELAS terlebih dahulu.");
+                return false;
+            }
+
+            // Tampilkan nama dan kelas yang sudah di-uppercase
+            displayName.textContent = `${namaInput.value.toUpperCase()} (${kelasInput.value.toUpperCase()})`;
+
+            // Sembunyikan form identitas dan tampilkan konten TTS dan tombol WA
+            identityForm.style.display = 'none';
+            ttsContent.style.display = 'block';
+            waButton.style.display = 'block'; // Tampilkan tombol WA
+        }
+
+        // Fungsi untuk mengambil semua jawaban dari input
+        function getAllAnswers() {
+            let answers = [];
+            const inputElements = document.querySelectorAll('.char-input');
+
+            // Ambil semua nilai input, termasuk ID (rXcY)
+            inputElements.forEach(input => {
+                if (input.value.trim() !== '') {
+                    answers.push({
+                        id: input.id,
+                        value: input.value.toUpperCase().trim()
+                    });
+                }
+            });
+
+            return answers;
+        }
+
+        function sendToWhatsApp() {
+            const nama = document.getElementById('nama').value.toUpperCase();
+            const kelas = document.getElementById('kelas').value.toUpperCase();
+            const answers = getAllAnswers();
+            
+            // Format jawaban menjadi string yang rapi
+            let answersText = "--- JAWABAN TTS ---\n";
+
+            if (answers.length === 0) {
+                answersText += "Belum ada jawaban yang diisi.";
+            } else {
+                 answersText += "Jawaban yang terisi:\n";
+                // Outputkan ID dan nilai. Kita asumsikan user akan meninjau jawaban di WA
+                answers.forEach(ans => {
+                    answersText += `[${ans.id}] = ${ans.value}\n`;
+                });
+            }
+            
+            // Pesan WhatsApp final
+            const message = `*HASIL PENGERJAAN TEKA-TEKI SILANG*
+----------------------------------
+Nama: ${nama}
+Kelas: ${kelas}
+----------------------------------
+${answersText}
+----------------------------------
+(Mohon tinjau jawaban di atas sebelum dikirim)`;
+
+            // Encoding pesan agar bisa masuk ke URL
+            const encodedMessage = encodeURIComponent(message);
+
+            // URL WhatsApp
+            const whatsappURL = `https://wa.me/${WA_NUMBER}?text=${encodedMessage}`;
+
+            // Buka link WhatsApp
+            window.open(whatsappURL, '_blank');
+        }
+    </script>
 </body>
 </html>
